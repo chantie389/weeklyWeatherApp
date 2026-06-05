@@ -60,19 +60,25 @@ class MainActivity : ComponentActivity() {
     fun WeatherApp(modifier: Modifier = Modifier) {
         var currentScreen by remember { mutableStateOf(ScreenType.SPLASH) }
         val weatherData = remember { SplashScreen() }
+        // state to hold user details entered on splash screen
+        var userName by remember { mutableStateOf("") }
+        var studentNumber by remember { mutableStateOf("") }
 
         when (currentScreen) {
             ScreenType.SPLASH -> ShowSplash(
-                onEnter = { currentScreen = ScreenType.INPUT },
-                onExit = { finish() }
+
+                onEnter = { currentScreen = ScreenType.INPUT},
+                onExit = { finish()}
             )
             ScreenType.INPUT -> ShowInputScreen(
                 data = weatherData,
-                onViewDetails = { currentScreen = ScreenType.DETAILS }
+                onViewDetails = { currentScreen = ScreenType.DETAILS
+                }
             )
             ScreenType.DETAILS -> ShowDetailsScreen(
                 data = weatherData,
-                onBack = { currentScreen = ScreenType.INPUT }
+                onBack = { currentScreen = ScreenType.INPUT}
+
             )
         }
     }
@@ -105,8 +111,8 @@ fun finish() {
                 modifier = Modifier.padding(bottom = 20.dp)
             )
 
-            Text(text = "Your Full Name Here", fontSize = 18.sp, modifier = Modifier.padding(bottom = 10.dp))
-            Text(text = "Student Number: XXXXXX", fontSize = 18.sp, modifier = Modifier.padding(bottom = 50.dp))
+            Text(text = " nhlelo lebissi", fontSize = 18.sp, modifier = Modifier.padding(bottom = 10.dp))
+            Text(text = "Student number:ST123456", fontSize = 18.sp, modifier = Modifier.padding(bottom = 50.dp))
 
             Button(
                 onClick = onEnter,
@@ -158,21 +164,21 @@ fun finish() {
                         Text(day.replaceFirstChar { it.uppercaseChar() }, fontWeight = FontWeight.Bold, modifier = Modifier.padding(bottom = 8.dp))
                         androidx.compose.foundation.layout.Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                             OutlinedTextField(
-                                minInputs[index].value,
+                                value = minInputs[index].value,
                                 { minInputs[index].value = it },
                                 label = { Text("Min °C") },
                                 keyboardOptions = androidx.compose.foundation.text.KeyboardOptions(keyboardType = KeyboardType.Number),
                                 modifier = Modifier.weight(1f)
                             )
                             OutlinedTextField(
-                                maxInputs[index].value,
+                                value = maxInputs[index].value,
                                 { maxInputs[index].value = it },
                                 label = { Text("Max °C") },
                                 keyboardOptions = androidx.compose.foundation.text.KeyboardOptions(keyboardType = KeyboardType.Number),
                                 modifier = Modifier.weight(1f)
                             )
                             OutlinedTextField(
-                                condInputs[index].value,
+                                value = condInputs[index].value,
                                 { condInputs[index].value = it },
                                 label = { Text("Condition") },
                                 modifier = Modifier.weight(1.5f)
@@ -189,7 +195,7 @@ fun finish() {
                     averageResult = ""
                     var valid = true
 
-                    // ✅ ERROR HANDLING + SAVE TO YOUR ARRAYS
+                    //ERROR HANDLING + SAVE TO YOUR ARRAYS
                     for (i in 0..6) {
                         val minStr = minInputs[i].value.trim()
                         val maxStr = maxInputs[i].value.trim()
@@ -224,11 +230,20 @@ fun finish() {
                         totalSum += (data.minTemp[i] + data.maxTemp[i]) / 2.0
                     }
                     val weeklyAvg = totalSum / 7
-                    averageResult = String.format("Average: %.1f°C", weeklyAvg)
+                    averageResult = String.format("Weekly Average Temperature: %.1f°C", weeklyAvg)
                 },
                 modifier = Modifier.fillMaxWidth().padding(top = 20.dp),
                 colors = androidx.compose.material3.ButtonDefaults.buttonColors(Color(0xFF4CAF50))
             ) { Text("Calculate Weekly Average", color = Color.White) }
+            if (averageResult.isNotEmpty()){
+                Text(
+                    text = averageResult,
+                    fontSize = 18.sp,
+                    color = Color(0xFF1976D2),
+                    fontWeight = FontWeight.Medium,
+                    modifier = Modifier.padding(top = 8.dp)
+                )
+            }
 
             // VIEW DETAILS
             Button(
