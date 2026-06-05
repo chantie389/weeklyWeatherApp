@@ -56,7 +56,6 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
     @Composable
     fun WeatherApp(modifier: Modifier = Modifier) {
         var currentScreen by remember { mutableStateOf(ScreenType.SPLASH) }
